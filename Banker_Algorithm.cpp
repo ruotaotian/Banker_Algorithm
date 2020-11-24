@@ -1,17 +1,20 @@
 #include<stdio.h>
+#include<conio.h>
+#include<windows.h>
+
 #define rN  50
 #define pN  50
 int processNum, resourceNum;
 
-int available[rN] = {};										  //¿ÉÀûÓÃ×ÊÔ´ÏòÁ¿available: 3,3,2
-int maxRequest[pN][rN] = {};								  //×î´óĞèÇó¾ØÕó: 7,5,3,3,2,2,9,0,2,2,2,2,4,3,3
-int allocation[pN][rN] = {};								  //·ÖÅä¾ØÕó: 0,1,0,2,0,0,3,0,2,2,1,1,0,0,2
-int need[pN][rN] = {};										  //ĞèÇó¾ØÕó: 7,4,3,1,2,2,6,0,0,0,1,1,4,3,1
-int requests[rN];											  //ÇëÇóµÄ×ÊÔ´
+int available[rN] = {};										  //å¯åˆ©ç”¨èµ„æºå‘é‡available: 3,3,2
+int maxRequest[pN][rN] = {};								  //æœ€å¤§éœ€æ±‚çŸ©é˜µ: 7,5,3,3,2,2,9,0,2,2,2,2,4,3,3
+int allocation[pN][rN] = {};								  //åˆ†é…çŸ©é˜µ: 0,1,0,2,0,0,3,0,2,2,1,1,0,0,2
+int need[pN][rN] = {};										  //éœ€æ±‚çŸ©é˜µ: 7,4,3,1,2,2,6,0,0,0,1,1,4,3,1
+int requests[rN];											  //è¯·æ±‚çš„èµ„æº
 bool Finish[pN];
-int safeSeries[pN] = {};									  //°²È«ĞòÁĞ
+int safeSeries[pN] = {};									  //å®‰å…¨åºåˆ—
 
-int safe_Algorithm()										//°²È«ĞÔËã·¨
+int safe_Algorithm()										//å®‰å…¨æ€§ç®—æ³•
 {
 	int work[rN],i;
 	int order = 0, r_flag = 0, p_flag = 0;
@@ -57,8 +60,8 @@ int safe_Algorithm()										//°²È«ĞÔËã·¨
 	}
 	if (p_flag == processNum)
 	{
-		printf("ÏµÍ³´¦ÓÚ°²È«×´Ì¬\n\n");
-		printf("°²È«ĞòÁĞÎª: ");
+		printf("ç³»ç»Ÿå¤„äºå®‰å…¨çŠ¶æ€\n\n");
+		printf("å®‰å…¨åºåˆ—ä¸º: ");
 		for (int i = 0; i < processNum; i++)
 		{
 			printf("P%d ", safeSeries[i]);
@@ -68,14 +71,14 @@ int safe_Algorithm()										//°²È«ĞÔËã·¨
 	}
 	else
 	{
-		printf("ÏµÍ³´¦ÓÚ²»°²È«×´Ì¬\n\n");
+		printf("ç³»ç»Ÿå¤„äºä¸å®‰å…¨çŠ¶æ€\n\n");
 		return 0;
 
 	}
 
 }
 
-void Banker_Algorithm(int process)                            //ÒøĞĞ¼ÒËã·¨
+void Banker_Algorithm(int process)                            //é“¶è¡Œå®¶ç®—æ³•
 {
 	int flag = 0;
 	bool result;
@@ -89,7 +92,7 @@ void Banker_Algorithm(int process)                            //ÒøĞĞ¼ÒËã·¨
 
 	if (flag == resourceNum)
 	{
-		printf("ËùĞè×ÊÔ´Ã»³¬¹ı×ÊÔ´µÄ×î´óÖµ\n\n");
+		printf("æ‰€éœ€èµ„æºæ²¡è¶…è¿‡èµ„æºçš„æœ€å¤§å€¼\n\n");
 		flag = 0;
 		for (int i = 0; i < resourceNum; i++)
 		{
@@ -100,7 +103,7 @@ void Banker_Algorithm(int process)                            //ÒøĞĞ¼ÒËã·¨
 		}
 		if (flag == resourceNum)
 		{
-			printf("ÓĞ×ã¹»µÄ¿ÉÀûÓÃ×ÊÔ´,ÏµÍ³ÊÔÌ½×Å½«×ÊÔ´·ÖÅä¸øP%d\n\n", process);
+			printf("æœ‰è¶³å¤Ÿçš„å¯åˆ©ç”¨èµ„æº,ç³»ç»Ÿè¯•æ¢ç€å°†èµ„æºåˆ†é…ç»™P%d\n\n", process);
 			for (int i = 0; i < resourceNum; i++)
 			{
 				need[process][i] = need[process][i] - requests[i];
@@ -110,7 +113,7 @@ void Banker_Algorithm(int process)                            //ÒøĞĞ¼ÒËã·¨
 			result = safe_Algorithm();
 			if (result == 1)
 			{
-				printf("ÏµÍ³°²È«, ÕıÊ½½«×ÊÔ´·ÖÅä¸øP%d\n\n", process);
+				printf("ç³»ç»Ÿå®‰å…¨, æ­£å¼å°†èµ„æºåˆ†é…ç»™P%d\n\n", process);
 			}
 			else
 			{
@@ -120,22 +123,22 @@ void Banker_Algorithm(int process)                            //ÒøĞĞ¼ÒËã·¨
 					allocation[process][i] = allocation[process][i] - requests[i];
 					available[i] = available[i] + requests[i];
 				}
-				printf("ÏµÍ³²»°²È«£¬´Ë´Î·ÖÅä×÷·Ï\n\n");
+				printf("ç³»ç»Ÿä¸å®‰å…¨ï¼Œæ­¤æ¬¡åˆ†é…ä½œåºŸ\n\n");
 			}
 		}
 		else
 		{
-			printf("ÉĞÎŞ×ã¹»×ÊÔ´,P%d½ø³ÌĞèµÈ´ı\n\n", process);
+			printf("å°šæ— è¶³å¤Ÿèµ„æº,P%dè¿›ç¨‹éœ€ç­‰å¾…\n\n", process);
 		}
 	}
 	else
 	{
-		printf("ËùĞè×ÊÔ´ÊıÒÑ¾­³¬¹ıÁËËûËùĞû²¼µÄ×î´óÖµ\n\n");
+		printf("æ‰€éœ€èµ„æºæ•°å·²ç»è¶…è¿‡äº†ä»–æ‰€å®£å¸ƒçš„æœ€å¤§å€¼\n\n");
 	}
 
 }
 
-void show_resource()										//ÏÔÊ¾ÏµÍ³×ÊÔ´
+void show_resource()										//æ˜¾ç¤ºç³»ç»Ÿèµ„æº
 {
 
 	printf("available[resourceNum] = ");
@@ -172,18 +175,18 @@ void show_resource()										//ÏÔÊ¾ÏµÍ³×ÊÔ´
 	printf("\n\n\n");
 }
 
-void input_resource()										//ÊäÈë×ÊÔ´
+void input_resource()										//è¾“å…¥èµ„æº
 {
-	printf("ÇëÊäÈë½ø³ÌÊı: ");
+	printf("è¯·è¾“å…¥è¿›ç¨‹æ•°: ");
 	scanf_s("%d", &processNum);
-	printf("ÇëÊäÈë×ÊÔ´Êı: ");
+	printf("è¯·è¾“å…¥èµ„æºæ•°: ");
 	scanf_s("%d", &resourceNum);
-	printf("\nÊäÈë¿ÉÀûÓÃ×ÊÔ´ÏòÁ¿Available: \n");
+	printf("\nè¾“å…¥å¯åˆ©ç”¨èµ„æºå‘é‡Available: \n");
 	for (int i = 0; i < resourceNum; i++)
 	{
 		scanf_s("%d", &available[i]);
 	}
-	printf("\nÊäÈë×î´óĞèÇó¾ØÕóMax: \n");
+	printf("\nè¾“å…¥æœ€å¤§éœ€æ±‚çŸ©é˜µMax: \n");
 	for (int i = 0; i < processNum; i++)
 	{
 		for (int j = 0; j < resourceNum; j++)
@@ -191,7 +194,7 @@ void input_resource()										//ÊäÈë×ÊÔ´
 			scanf_s("%d", &maxRequest[i][j]);
 		}
 	}
-	printf("\nÊäÈë·ÖÅä¾ØÕóAllocation: \n");
+	printf("\nè¾“å…¥åˆ†é…çŸ©é˜µAllocation: \n");
 	for (int i = 0; i < processNum; i++)
 	{
 		for (int j = 0; j < resourceNum; j++)
@@ -215,28 +218,29 @@ int main()
 	int process;
 	while (true)
 	{
+		system("cls");
 		printf("******************************************************************************************\n\n");
-		printf("***********************************»¶Ó­Ê¹ÓÃÒøĞĞ¼ÒËã·¨*************************************\n\n");
-		printf("\n1.ÊäÈë×ÊÔ´\n2.ÒøĞĞ¼ÒËã·¨\n3.°²È«ĞÔËã·¨\n4.ÏÔÊ¾ÏµÍ³×ÊÔ´\n0.ÍË³ö\n\n");
+		printf("***********************************æ¬¢è¿ä½¿ç”¨é“¶è¡Œå®¶ç®—æ³•*************************************\n\n");
+		printf("\n1.è¾“å…¥èµ„æº\n2.é“¶è¡Œå®¶ç®—æ³•\n3.å®‰å…¨æ€§ç®—æ³•\n4.æ˜¾ç¤ºç³»ç»Ÿèµ„æº\n0.é€€å‡º\n\n");
 		printf("******************************************************************************************\n\n");
-		printf("ÇëÊäÈë²Ù×÷Ñ¡Ïî: ");
+		printf("è¯·è¾“å…¥æ“ä½œé€‰é¡¹: ");
 		scanf_s("%d", &choose);
 		if (choose == 2)
 		{
 			if(resourceNum != 0 && processNum != 0)
 			{ 
-				printf("ÊäÈëÇëÇóµÄ½ø³Ì: ");
+				printf("è¾“å…¥è¯·æ±‚çš„è¿›ç¨‹: ");
 				scanf_s("%d", &process);
 				for (int i = 0; i < resourceNum; i++)
 				{
-					printf("ÊäÈërequestsÇëÇó%dÀà×ÊÔ´: ", i);
+					printf("è¾“å…¥requestsè¯·æ±‚%dç±»èµ„æº: ", i);
 					scanf_s("%d", &requests[i]);
 				}
 				Banker_Algorithm(process);
 			}
 			else
 			{
-				printf("µ±Ç°ÏµÍ³ÎŞ×ÊÔ´Çë·ÖÅä×ÊÔ´ºóÔÙÔËĞĞËã·¨\n\n");
+				printf("å½“å‰ç³»ç»Ÿæ— èµ„æºè¯·åˆ†é…èµ„æºåå†è¿è¡Œç®—æ³•\n\n");
 			}
 		}
 
@@ -248,7 +252,7 @@ int main()
 			}
 			else
 			{
-				printf("µ±Ç°ÏµÍ³ÎŞ×ÊÔ´Çë·ÖÅä×ÊÔ´ºóÔÙÔËĞĞËã·¨\n\n");
+				printf("å½“å‰ç³»ç»Ÿæ— èµ„æºè¯·åˆ†é…èµ„æºåå†è¿è¡Œç®—æ³•\n\n");
 			}
 		}
 
@@ -261,6 +265,8 @@ int main()
 		{
 			input_resource();
 		}
+
+		_getch();
 
 		if (choose == 0)
 		{
