@@ -14,6 +14,56 @@ int requests[rN];											  //请求的资源
 bool Finish[pN];
 int safeSeries[pN] = {};									  //安全序列
 
+void show_resource()										//显示系统资源
+{
+
+	printf("available[resourceNum] = ");
+	for (int i = 0; i < resourceNum; i++)
+	{
+		printf("  %d  ", available[i]);
+	}
+	printf("\n\n\n");
+	printf("allocation[processNum][resourceNum]: ");
+	for (int i = 0; i < processNum; i++)
+	{
+		for (int j = 0; j < resourceNum; j++)
+		{
+			if (j % 3 == 0)
+			{
+				printf("\n");
+			}
+			printf("   %d   ", allocation[i][j]);
+		}
+	}
+	printf("\n\n\n");
+	printf("need[processNum][resourceNum]: ");
+	for (int i = 0; i < processNum; i++)
+	{
+		for (int j = 0; j < resourceNum; j++)
+		{
+			if (j % 3 == 0)
+			{
+				printf("\n");
+			}
+			printf("   %d   ", need[i][j]);
+		}
+	}
+	printf("\n\n\n");
+	printf("max[processNum][resourceNum]: ");
+	for (int i = 0; i < processNum; i++)
+	{
+		for (int j = 0; j < resourceNum; j++)
+		{
+			if (j % 3 == 0)
+			{
+				printf("\n");
+			}
+			printf("   %d   ", maxRequest[i][j]);
+		}
+	}
+	printf("\n\n\n");
+}
+
 int safe_Algorithm()										//安全性算法
 {
 	int work[rN],i;
@@ -27,7 +77,7 @@ int safe_Algorithm()										//安全性算法
 	{
 		Finish[i] = false;
 	}
-	while(p_flag < processNum)
+	for(int n = 0; n < processNum; n++)
 	{
 		for (int i = 0; i < processNum; i++)
 		{
@@ -37,24 +87,28 @@ int safe_Algorithm()										//安全性算法
 				{
 					r_flag++;
 				}
-				if (r_flag == resourceNum)
+			}
+			if (r_flag == resourceNum)
+			{
+				r_flag = 0;
+				printf("P%d ", i);
+				Finish[i] = true;
+				for (int j = 0; j < resourceNum; j++)
 				{
-					r_flag = 0;
-					printf("P%d ", i);
-					Finish[i] = true;
-					for (int j = 0; j < resourceNum; j++)
-					{
-						work[j] = work[j] + allocation[i][j];
-					}
-					for (int i = 0; i < resourceNum; i++)
-					{
-						printf(" %d", work[i]);
-					}
-					printf("\n");
-					safeSeries[order] = i;
-					order++;
-					p_flag++;
+					work[j] = work[j] + allocation[i][j];
 				}
+				for (int i = 0; i < resourceNum; i++)
+				{
+					printf(" %d", work[i]);
+				}
+				printf("\n");
+				safeSeries[order] = i;
+				order++;
+				p_flag++;
+			}
+			else
+			{
+				r_flag = 0;
 			}
 		}
 	}
@@ -114,6 +168,7 @@ void Banker_Algorithm(int process)                            //银行家算法
 			if (result == 1)
 			{
 				printf("系统安全, 正式将资源分配给P%d\n\n", process);
+				show_resource();
 			}
 			else
 			{
@@ -124,6 +179,7 @@ void Banker_Algorithm(int process)                            //银行家算法
 					available[i] = available[i] + requests[i];
 				}
 				printf("系统不安全，此次分配作废\n\n");
+				show_resource();
 			}
 		}
 		else
@@ -138,42 +194,6 @@ void Banker_Algorithm(int process)                            //银行家算法
 
 }
 
-void show_resource()										//显示系统资源
-{
-
-	printf("available[resourceNum] = ");
-	for (int i = 0; i < resourceNum; i++)
-	{
-		printf("  %d  ", available[i]);
-	}
-	printf("\n\n\n");
-	printf("allocation[processNum][resourceNum]: ");
-	for (int i = 0; i < processNum; i++)
-	{
-		for (int j = 0; j < resourceNum; j++)
-		{
-			if (j % 3 == 0)
-			{
-				printf("\n");
-			}
-			printf("   %d   ", allocation[i][j]);
-		}
-	}
-	printf("\n\n\n");
-	printf("need[processNum][resourceNum]: ");
-	for (int i = 0; i < processNum; i++)
-	{
-		for (int j = 0; j < resourceNum; j++)
-		{
-			if (j % 3 == 0)
-			{
-				printf("\n");
-			}
-			printf("   %d   ", need[i][j]);
-		}
-	}
-	printf("\n\n\n");
-}
 
 void input_resource()										//输入资源
 {
